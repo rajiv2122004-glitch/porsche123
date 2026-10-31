@@ -1,4 +1,11 @@
 import { PorscheModel, TestDriveCenter } from '../types/porsche';
+import gt3rsImg from '../assets/images/hero_porsche_gt3rs_1793441551570.jpg';
+import carreraGtsImg from '../assets/images/porsche_911_carrera_gts_1793441572623.jpg';
+import caymanGt4rsImg from '../assets/images/porsche_718_cayman_gt4rs_1793441552449.jpg';
+import taycanTurboGtImg from '../assets/images/porsche_taycan_turbo_gt_1793441551186.jpg';
+import cayenneTurboGtImg from '../assets/images/porsche_cayenne_turbo_gt_1793441572827.jpg';
+import panameraEHybridImg from '../assets/images/porsche_panamera_ehybrid_1793441554563.jpg';
+import dakarImg from '../assets/images/porsche_911_dakar_1793441553627.jpg';
 
 export const PORSCHE_MODELS: PorscheModel[] = [
   {
@@ -23,7 +30,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: true,
     statusNote: 'Official ex-showroom price India (Base specification)',
-    image: '/src/assets/images/hero_porsche_gt3rs_1793441551570.jpg',
+    image: gt3rsImg,
     dimensions: {
       length: '4,572 mm',
       width: '1,900 mm (excl. mirrors)',
@@ -62,7 +69,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: true,
     statusNote: 'Official indicative ex-showroom price India',
-    image: '/src/assets/images/porsche_911_carrera_gts_1793441572623.jpg',
+    image: carreraGtsImg,
     dimensions: {
       length: '4,553 mm',
       width: '1,852 mm',
@@ -101,7 +108,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: true,
     statusNote: 'Official ex-showroom price India (Standard GT4 RS)',
-    image: '/src/assets/images/porsche_718_cayman_gt4rs_1793441552449.jpg',
+    image: caymanGt4rsImg,
     dimensions: {
       length: '4,456 mm',
       width: '1,822 mm',
@@ -140,7 +147,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: true,
     statusNote: 'Official ex-showroom price India (Base Turbo GT)',
-    image: '/src/assets/images/porsche_taycan_turbo_gt_1793441551186.jpg',
+    image: taycanTurboGtImg,
     dimensions: {
       length: '4,968 mm',
       width: '1,966 mm',
@@ -179,7 +186,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: true,
     statusNote: 'Official indicative ex-showroom price India',
-    image: '/src/assets/images/porsche_cayenne_turbo_gt_1793441572827.jpg',
+    image: cayenneTurboGtImg,
     dimensions: {
       length: '4,932 mm',
       width: '1,995 mm',
@@ -218,7 +225,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: true,
     isAvailableInIndia: true,
     statusNote: 'Indicative estimated ex-showroom price for India market',
-    image: '/src/assets/images/porsche_panamera_ehybrid_1793441554563.jpg',
+    image: panameraEHybridImg,
     dimensions: {
       length: '5,052 mm',
       width: '1,937 mm',
@@ -257,7 +264,7 @@ export const PORSCHE_MODELS: PorscheModel[] = [
     isEstimate: false,
     isAvailableInIndia: false,
     statusNote: 'Limited edition (2,500 units). Contact Porsche India for allocation status',
-    image: '/src/assets/images/porsche_911_dakar_1793441553627.jpg',
+    image: dakarImg,
     dimensions: {
       length: '4,530 mm',
       width: '1,864 mm',

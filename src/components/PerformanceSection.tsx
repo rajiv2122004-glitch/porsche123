@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Gauge, Compass, Cpu, Sliders, Shield, Zap } from 'lucide-react';
+import interiorCockpitImg from '../assets/images/porsche_interior_cockpit_1793441573320.jpg';
 
 export const PerformanceSection: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'performance' | 'design' | 'technology'>('performance');
@@ -197,7 +198,7 @@ export const PerformanceSection: React.FC = () => {
           {/* Right Column: High-Resolution Interior Cockpit Photography */}
           <div className="lg:col-span-5 relative overflow-hidden bg-black border border-white/10 flex flex-col justify-end min-h-[380px] lg:min-h-full">
             <img
-              src="/src/assets/images/porsche_interior_cockpit_1793441573320.jpg"
+              src={interiorCockpitImg}
               alt="Porsche driver cockpit and GT steering wheel"
               referrerPolicy="no-referrer"
               className="absolute inset-0 w-full h-full object-cover object-center"

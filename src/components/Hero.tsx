@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, Volume2, VolumeX } from 'lucide-react';
 import { playEngineRev } from '../utils/audio';
+import heroGt3rsImg from '../assets/images/hero_porsche_gt3rs_1793441551570.jpg';
 
 interface HeroProps {
   onExploreModels: () => void;
@@ -27,7 +28,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreModels, onBookTestDrive }) 
       {/* Background Cinematic Image with Subtle Ambient Motion */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
-          src="/src/assets/images/hero_porsche_gt3rs_1793441551570.jpg"
+          src={heroGt3rsImg}
           alt="Porsche 911 GT3 RS in cinematic showroom lighting"
           referrerPolicy="no-referrer"
           className="w-full h-full object-cover object-center scale-105 animate-[zoom-slow_24s_ease-in-out_infinite_alternate]"

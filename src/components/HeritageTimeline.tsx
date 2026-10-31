@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Trophy, Calendar } from 'lucide-react';
 import { HERITAGE_TIMELINE } from '../data/porscheModels';
+import heritageClassicImg from '../assets/images/porsche_heritage_classic_1793441590161.jpg';
 
 export const HeritageTimeline: React.FC = () => {
   const [selectedMilestone, setSelectedMilestone] = useState(0);
@@ -29,7 +30,7 @@ export const HeritageTimeline: React.FC = () => {
         {/* Feature Hero Card with 1948 356 Archival Photograph */}
         <div className="relative aspect-[16/9] md:aspect-[21/9] w-full bg-black border border-white/15 overflow-hidden mb-16 shadow-2xl">
           <img
-            src="/src/assets/images/porsche_heritage_classic_1793441590161.jpg"
+            src={heritageClassicImg}
             alt="1948 Porsche 356 No. 1 Roadster in historic Gmünd setting"
             referrerPolicy="no-referrer"
             className="w-full h-full object-cover object-center filter grayscale-[30%] contrast-[1.1]"
