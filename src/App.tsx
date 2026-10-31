@@ -10,6 +10,7 @@ import { PerformanceSection } from './components/PerformanceSection';
 import { HeritageTimeline } from './components/HeritageTimeline';
 import { TestDriveBooking } from './components/TestDriveBooking';
 import { Footer } from './components/Footer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { PorscheModel } from './types/porsche';
 import { PORSCHE_MODELS } from './data/porscheModels';
 
@@ -64,7 +65,9 @@ export default function App() {
       />
 
       {/* 5. Interactive 3D Car Experience */}
-      <Porsche3DExperience />
+      <ErrorBoundary>
+        <Porsche3DExperience />
+      </ErrorBoundary>
 
       {/* 6. Porsche Performance Section */}
       <PerformanceSection />

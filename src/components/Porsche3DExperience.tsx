@@ -84,58 +84,71 @@ export const Porsche3DExperience: React.FC = () => {
     distance: 5.6,
   });
 
+  const [webGlError, setWebGlError] = useState(false);
+
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
 
-    // Detect software WebGL guard
-    const isSoftwareGl = (() => {
+    let renderer: THREE.WebGLRenderer | null = null;
+    let animId = 0;
+
+    try {
+      // Dimension guard
+      const width = container.clientWidth || 800;
+      const height = container.clientHeight || 500;
+
+      // Detect software WebGL guard
+      let isSoftwareGl = false;
       try {
         const gl = document.createElement('canvas').getContext('webgl2');
-        if (!gl) return true;
-        const ext = gl.getExtension('WEBGL_debug_renderer_info');
-        const param = ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER;
-        const gpu = String(gl.getParameter(param));
-        gl.getExtension('WEBGL_lose_context')?.loseContext();
-        return /SwiftShader|llvmpipe|softpipe|Software|Basic Render/i.test(gpu);
+        if (gl) {
+          const ext = gl.getExtension('WEBGL_debug_renderer_info');
+          const param = ext ? ext.UNMASKED_RENDERER_WEBGL : gl.RENDERER;
+          const gpu = String(gl.getParameter(param));
+          isSoftwareGl = /SwiftShader|llvmpipe|softpipe|Software|Basic Render/i.test(gpu);
+        }
       } catch {
-        return false;
+        isSoftwareGl = false;
       }
-    })();
 
-    // Scene setup
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x07080a);
-    scene.fog = new THREE.FogExp2(0x07080a, 0.04);
+      // Scene setup
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07080a);
+      scene.fog = new THREE.FogExp2(0x07080a, 0.04);
 
-    const camera = new THREE.PerspectiveCamera(
-      42,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      50
-    );
-    camera.position.set(3.4, 1.6, 3.8);
+      const camera = new THREE.PerspectiveCamera(
+        42,
+        width / height,
+        0.1,
+        50
+      );
+      camera.position.set(3.4, 1.6, 3.8);
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: !isSoftwareGl,
-      powerPreference: 'high-performance',
-    });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2));
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.15;
-    renderer.shadowMap.enabled = !isSoftwareGl;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer = new THREE.WebGLRenderer({
+        antialias: !isSoftwareGl,
+        powerPreference: 'high-performance',
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(isSoftwareGl ? 1 : Math.min(window.devicePixelRatio, 2));
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+      renderer.shadowMap.enabled = !isSoftwareGl;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-    container.replaceChildren(renderer.domElement);
+      container.replaceChildren(renderer.domElement);
 
-    // Studio Environment Reflections via PMREMGenerator
-    const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    pmremGenerator.compileEquirectangularShader();
-    const envRoom = new RoomEnvironment();
-    scene.environment = pmremGenerator.fromScene(envRoom, 0.04).texture;
-    pmremGenerator.dispose();
+      // Studio Environment Reflections via PMREMGenerator
+      try {
+        const pmremGenerator = new THREE.PMREMGenerator(renderer);
+        pmremGenerator.compileEquirectangularShader();
+        const envRoom = new RoomEnvironment();
+        scene.environment = pmremGenerator.fromScene(envRoom, 0.04).texture;
+        pmremGenerator.dispose();
+      } catch (e) {
+        console.warn('RoomEnvironment fallback to hemisphere light:', e);
+      }
 
     // Studio Lighting Rig
     const keyLight = new THREE.DirectionalLight(0xffffff, 2.5);
@@ -507,9 +520,11 @@ export const Porsche3DExperience: React.FC = () => {
     // Handle Resize
     const handleResize = () => {
       if (!container) return;
-      camera.aspect = container.clientWidth / container.clientHeight;
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 500;
+      camera.aspect = w / h;
       camera.updateProjectionMatrix();
-      renderer.setSize(container.clientWidth, container.clientHeight);
+      renderer?.setSize(w, h);
     };
     window.addEventListener('resize', handleResize);
 
@@ -548,24 +563,31 @@ export const Porsche3DExperience: React.FC = () => {
         m.scale.set(s, s, s);
       });
 
-      renderer.render(scene, camera);
+      renderer?.render(scene, camera);
       animId = requestAnimationFrame(tick);
     };
 
     animId = requestAnimationFrame(tick);
 
     return () => {
-      cancelAnimationFrame(animId);
-      window.removeEventListener('resize', handleResize);
-      domEl.removeEventListener('mousedown', handlePointerDown);
-      window.removeEventListener('mousemove', handlePointerMove);
-      window.removeEventListener('mouseup', handlePointerUp);
-      domEl.removeEventListener('touchstart', handlePointerDown);
-      window.removeEventListener('touchmove', handlePointerMove);
-      window.removeEventListener('touchend', handlePointerUp);
-      domEl.removeEventListener('wheel', handleWheel);
-      renderer.dispose();
-    };
+        cancelAnimationFrame(animId);
+        window.removeEventListener('resize', handleResize);
+        if (domEl) {
+          domEl.removeEventListener('mousedown', handlePointerDown);
+          domEl.removeEventListener('touchstart', handlePointerDown);
+          domEl.removeEventListener('wheel', handleWheel);
+        }
+        window.removeEventListener('mousemove', handlePointerMove);
+        window.removeEventListener('mouseup', handlePointerUp);
+        window.removeEventListener('touchmove', handlePointerMove);
+        window.removeEventListener('touchend', handlePointerUp);
+        renderer?.dispose();
+      };
+    } catch (err) {
+      console.error('WebGL 3D Studio initialization failed, switching to interactive studio fallback:', err);
+      setWebGlError(true);
+      return () => {};
+    }
   }, [autoRotate]);
 
   // Color change sync
@@ -619,8 +641,21 @@ export const Porsche3DExperience: React.FC = () => {
 
         {/* 3D Viewport Frame */}
         <div className="relative w-full aspect-[16/10] md:aspect-[21/10] bg-[#090a0d] border border-white/15 overflow-hidden shadow-2xl">
-          {/* Isolated WebGL Mount Ref */}
-          <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+          {/* Isolated WebGL Mount Ref or Resilient Fallback */}
+          {webGlError ? (
+            <div className="relative w-full h-full bg-gradient-to-b from-[#12141c] to-black flex items-center justify-center p-6">
+              <img
+                src="/src/assets/images/hero_porsche_gt3rs_1793441551570.jpg"
+                alt="Porsche 911 GT3 RS Studio"
+                className="max-h-full max-w-full object-contain filter drop-shadow-2xl transition-transform duration-500"
+              />
+              <div className="absolute bottom-16 left-6 text-xs text-neutral-400 bg-black/60 px-3 py-1.5 border border-white/10">
+                Studio Viewport Active (Optimized Render)
+              </div>
+            </div>
+          ) : (
+            <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+          )}
 
           {/* Top Left Spec Badge & Active Model */}
           <div className="absolute top-5 left-5 z-20 pointer-events-none">
