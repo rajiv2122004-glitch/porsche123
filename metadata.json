@@ -1,0 +1,6 @@
+{
+  "name": "PORSCHE – The Art of Performance",
+  "description": "World-class luxury automotive experience showcasing Porsche's flagship lineup, verified Indian pricing, interactive 3D studio, heritage, and test drive reservations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
